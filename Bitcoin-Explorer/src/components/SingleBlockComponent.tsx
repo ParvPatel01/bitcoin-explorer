@@ -14,7 +14,7 @@ const SingleBlockComponent = (props: SingleBlockProp) => {
         <div>
             <SearchBar placeholder="hash" query={query} setQuery={setQuery} setSingleBlock={props.setSingleBlock} singleBlock={props.singleBlock} />
             <Box>
-                <Card sx={{ m: 2, minWidth: 275, maxWidth: '560px' }}>
+                <Card sx={{ m: 2, minWidth: 560, maxWidth: '560px' }}>
                     <CardContent>
                         <Typography variant="h5" component="div">
                             Single Block
@@ -33,7 +33,7 @@ const SingleBlockComponent = (props: SingleBlockProp) => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small">Learn More</Button>
+                        <Button size="small">Open</Button>
                     </CardActions>
                 </Card>
             </ Box>
