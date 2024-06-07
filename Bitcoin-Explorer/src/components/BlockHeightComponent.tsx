@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography, CardActions, Button, Avatar, CardHeader, CardMedia, Collapse, IconButton, IconButtonProps } from "@mui/material";
+import { Box, Card, CardContent, Typography, CardActions, Collapse, IconButton, IconButtonProps } from "@mui/material";
 import { BlockHeight } from "../models/BlockHeight";
 import SearchBar from "./SeachBar";
 import { useState } from "react";

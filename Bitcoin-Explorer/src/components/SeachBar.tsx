@@ -1,8 +1,6 @@
 import { Paper, IconButton, InputBase, Divider } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { getSingleBlockByHashValue } from "../services/single-block-services";
-import { getBlockHeight } from "../services/block-height-services";
-import { BlockHeight } from "../models/BlockHeight";
+import { ingestBlockHeightDataAtInterval, ingestSingleBlockDataAtInterval } from "../services/ingestion-services";
 
 type Props = {
     placeholder: string;
@@ -23,23 +21,14 @@ const SearchBar = (props: Props) => {
         }
 
         if (props.query && props.placeholder === 'hash') {
-            getSingleBlockByHashValue(props.query)
-                .then(data => {
-                    if (props.setSingleBlock) {
-                        props.setSingleBlock(data);
-                    }
-                })
+            if (props.setSingleBlock) {
+                ingestSingleBlockDataAtInterval(props.query, props.setSingleBlock);
+            }
         }
         if (props.query && props.placeholder === 'Block Height') {
-            console.log(props.placeholder, props.query);
-            getBlockHeight(Number(props.query))
-                .then((data: BlockHeight[]) => {
-                    // handleAddingValueToBlockHeightCard(data);
-                    if (props.setBlockHeight) {
-                        props.setBlockHeight(data);
-                    }
-                }
-          )
+            if (props.setBlockHeight) {
+                ingestBlockHeightDataAtInterval(props.query, props.setBlockHeight);
+            }
         }
     }
 
