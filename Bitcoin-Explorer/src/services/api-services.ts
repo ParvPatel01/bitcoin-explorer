@@ -1,8 +1,9 @@
-const serverURL = 'https://blockchain.info';
+const serverURL = 'http://127.0.0.1:7878';
 
-export const search = async <T> (path: string, searchParam: string, params: any = {}): Promise<T[]> => {
+
+export const search = async <T> (path: string, searchParam: string = '', params: any = {}): Promise<T[]> => {
     const query: URLSearchParams = new URLSearchParams(params);
-    const response = await fetch(`${serverURL}/${path}/${searchParam}?${query.toString()}`, 
+    const response = await fetch(`${serverURL}/${path}?search=${searchParam}&${query.toString()}`, 
         {method: 'GET'}
     );
     return response.json();

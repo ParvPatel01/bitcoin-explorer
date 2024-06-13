@@ -37,7 +37,7 @@ const NavBar = (prop: Props) => {
           <Typography variant="h5" component="div" sx={{ flexGrow: 1, fontWeight: 800 }}>
             BitCoin Explorer
           </Typography>
-          <Box sx={{minWidth: '240px'}}>
+          {/* <Box sx={{minWidth: '240px'}}>
           <FormControl fullWidth>
             <InputLabel sx={{color: 'white'}} id="demo-simple-select-label">Metric</InputLabel>
             <Select
@@ -52,7 +52,7 @@ const NavBar = (prop: Props) => {
               <MenuItem value={'blockHeight'}>Block Height</MenuItem>
             </Select>
           </FormControl>
-          </Box>
+          </Box> */}
         </Toolbar>
       </AppBar>
     </Box>

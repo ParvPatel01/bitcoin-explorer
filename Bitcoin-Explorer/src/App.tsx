@@ -4,10 +4,8 @@ import { useState, useEffect } from 'react';
 
 
 
-
 function App() {
   const [metric, setMetric] = useState('');
-
   return (
     <>
       <NavBar metric={metric} setMetric={setMetric} />

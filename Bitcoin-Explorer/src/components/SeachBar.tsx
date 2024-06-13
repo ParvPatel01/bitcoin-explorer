@@ -1,6 +1,8 @@
 import { Paper, IconButton, InputBase, Divider } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { ingestBlockHeightDataAtInterval, ingestSingleBlockDataAtInterval } from "../services/ingestion-services";
+import { getLatestBlock } from "../services/latest-block-services";
+
 
 type Props = {
     placeholder: string;

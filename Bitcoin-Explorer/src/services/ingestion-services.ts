@@ -1,5 +1,6 @@
 import { getSingleBlockByHashValue } from '../services/single-block-services';
 import { getBlockHeight } from '../services/block-height-services';
+import { getLatestBlock } from '../services/latest-block-services';
 
 const getSingleBlockData = (query: string, setSingleBlock: Function) => {
     getSingleBlockByHashValue(query)
@@ -21,6 +22,24 @@ const getBlockHeightData = (query: string, setBlockHeight: Function) => {
             })
 };
 
+const ingestLatestBlcokDataAtInterval = (setLatestBlock: Function) => {
+    getLatestBlock()
+    .then((data : any) => {
+        if (setLatestBlock) {
+            setLatestBlock(data);
+            console.log('LatestBlock: ', data);
+        }
+    });
+    setInterval(() => {
+        getLatestBlock()
+        .then((data : any) => {
+            if (setLatestBlock) {
+                setLatestBlock(data);
+                console.log('LatestBlock: ', data);
+            }
+        });
+    }, 10 * 60 * 1000)
+}
 
 const ingestSingleBlockDataAtInterval = (query: string, setSingleBlock: Function) => {
     getSingleBlockData(query, setSingleBlock);
@@ -36,4 +55,4 @@ const ingestBlockHeightDataAtInterval = (query: string, setBlockHeight: Function
     },  10 * 60 * 1000)
 };
 
-export { ingestSingleBlockDataAtInterval, ingestBlockHeightDataAtInterval };
+export { ingestSingleBlockDataAtInterval, ingestBlockHeightDataAtInterval, ingestLatestBlcokDataAtInterval };
