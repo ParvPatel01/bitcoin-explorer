@@ -1,6 +1,7 @@
 CREATE TABLE latest_block (
-    hash VARCHAR PRIMARY KEY NOT NULL,
-    time INTEGER NOT NULL,
-    block_index INTEGER NOT NULL,
-    height INTEGER NOT NULL
+    latest_block_id SERIAL PRIMARY KEY,
+    hash VARCHAR NOT NULL,
+    time VARCHAR NOT NULL,
+    block_index VARCHAR NOT NULL,
+    height VARCHAR NOT NULL
 ); 

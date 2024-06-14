@@ -6,6 +6,7 @@ version = 3
 name = "Bitcoin-Explorer-Backend"
 version = "0.1.0"
 dependencies = [
+ "once_cell",
  "reqwest",
  "serde",
  "serde_json",
