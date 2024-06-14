@@ -3,9 +3,10 @@ import HomeContainer from './pages/HomeContainer';
 import { useState, useEffect } from 'react';
 
 
-
 function App() {
+  const [charts, setCharts] = useState([]);
   const [metric, setMetric] = useState('');
+
   return (
     <>
       <NavBar metric={metric} setMetric={setMetric} />

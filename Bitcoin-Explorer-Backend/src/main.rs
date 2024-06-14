@@ -2,13 +2,7 @@ use reqwest::Identity;
 use serde::{Deserialize, Serialize};
 use sqlx::Row;
 use std::{
-    any::Any,
-    error::Error,
-    fs::{self, read},
-    io::prelude::*,
-    net::{TcpListener, TcpStream},
-    thread::sleep,
-    time::{Duration, Instant},
+    any::Any, error::Error, fs::{self, read}, io::prelude::*, net::{TcpListener, TcpStream}, thread::sleep, time::{Duration, Instant}
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -82,21 +76,11 @@ async fn blocking_get() -> Result<LatestBlock, Box<dyn Error>> {
 async fn handle_connection(mut stream: TcpStream, pool: sqlx::PgPool) {
     let mut buffer = [0; 1024];
     stream.read(&mut buffer).unwrap();
-    let interval = Duration::from_secs(1 * 60);
-    let mut next_time = Instant::now() + interval;
-    loop {
-        let latest_block = blocking_get().await.unwrap();
-        let past_block = read_latest_block(&pool).await.unwrap();
-        let latest_block_json;
-        if latest_block.hash == past_block.hash {
-            println!("Latest Block Already Exists!");
-            latest_block_json = serde_json::to_string(&past_block).unwrap();
-        } else {
-            create_latest_block(&latest_block, &pool).await.unwrap();
-            latest_block_json = serde_json::to_string(&latest_block).unwrap()
-        }
-        let response = format!(
-            "HTTP/1.1 200 OK\r\n\
+
+    let latest_block = read_latest_block(&pool).await.unwrap();
+    let latest_block_json = serde_json::to_string(&latest_block).unwrap();
+    let response = format!(
+        "HTTP/1.1 200 OK\r\n\
              Content-Length: {}\r\n\
              Content-Type: application/json\r\n\
              Access-Control-Allow-Origin: *\r\n\
@@ -104,15 +88,12 @@ async fn handle_connection(mut stream: TcpStream, pool: sqlx::PgPool) {
              Access-Control-Allow-Headers: Content-Type\r\n\
              \r\n\
              {}",
-            latest_block_json.len(),
-            latest_block_json
-        );
-        println!("Response: {:?}", response);
-        stream.write(response.as_bytes()).unwrap();
-        stream.flush().unwrap();
-        sleep(next_time - Instant::now());
-        next_time += interval;
-    }
+        latest_block_json.len(),
+        latest_block_json
+    );
+    println!("Response: {:?}", response);
+    stream.write(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
 }
 
 #[tokio::main]
@@ -122,11 +103,16 @@ async fn main() {
     let addr = "127.0.0.1:7878";
     let listner = TcpListener::bind(addr).unwrap();
     println!("Listening on {}", addr);
-
+    
     for stream in listner.incoming() {
         let stream = stream.unwrap();
         let pool = sqlx::postgres::PgPool::connect(url).await.unwrap();
         let _ = sqlx::migrate!("./migrations").run(&pool).await;
+        let latest_block = blocking_get().await.unwrap();
+        let past_block = read_latest_block(&pool).await.unwrap();
+        if latest_block.hash != past_block.hash {
+            create_latest_block(&latest_block, &pool).await.unwrap();
+        }
         handle_connection(stream, pool).await;
         println!("Connection established!");
     }
