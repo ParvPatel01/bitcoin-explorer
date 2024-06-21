@@ -101,7 +101,7 @@ async fn get_graph_data() -> Result<GraphBlock, Box<dyn Error>> {
     )
     .await?;
     let graph_data: GraphBlock = res.json().await?;
-    println!("Fetched Graph Data: {:?}", graph_data);
+    println!("Graph Data Fetched Successfully!");
     Ok(graph_data)
 }
 
@@ -112,8 +112,18 @@ async fn handle_connection(mut stream: TcpStream, pool: sqlx::PgPool) {
     
     let response = if request_line == "GET /latest_block?search=& HTTP/1.1" {
         println!("Sending Latest Block!");
-        let latest_block = read_latest_block(&pool).await.unwrap();
-        let content_json =  serde_json::to_string(&latest_block).unwrap();
+        let latest_block = get_latest_block().await.unwrap();
+        let past_block = read_latest_block(&pool).await.unwrap();
+        let mut content_json;
+
+        if latest_block.hash != past_block.hash {
+            println!("latest block is not same as past block");
+            create_latest_block(&latest_block, &pool).await.unwrap();
+            content_json = serde_json::to_string(&latest_block).unwrap();
+        } else {
+            println!("latest block is same as past block");
+            content_json =  serde_json::to_string(&past_block).unwrap();
+        }
         
         format!(
             "HTTP/1.1 200 OK\r\n\
@@ -180,12 +190,6 @@ async fn main() {
 
     for stream in listner.incoming() {
         let stream = stream.unwrap();
-        // let latest_block = get_latest_block().await.unwrap();
-        // let past_block = read_latest_block(&pool).await.unwrap();
-        // if latest_block.hash != past_block.hash {
-        //     println!("latest block is not same as past block");
-        //     create_latest_block(&latest_block, &pool).await.unwrap();
-        // }
         handle_connection(stream, pool.clone()).await;
         println!("Connection established!");
     }

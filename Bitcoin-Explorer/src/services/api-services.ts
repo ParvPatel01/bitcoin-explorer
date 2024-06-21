@@ -1,7 +1,5 @@
 const serverURL = 'http://127.0.0.1:7878';
 
-const chartURL = 'https://api.blockchain.info/charts';
-
 
 export const search = async <T> (path: string, searchParam: string = '', params: any = {}): Promise<T[]> => {
     const query: URLSearchParams = new URLSearchParams(params);
