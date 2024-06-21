@@ -4,13 +4,11 @@ import { useState, useEffect } from 'react';
 
 
 function App() {
-  const [charts, setCharts] = useState([]);
-  const [metric, setMetric] = useState('');
 
   return (
     <>
-      <NavBar metric={metric} setMetric={setMetric} />
-      <HomeContainer metric={metric} />
+      <NavBar/>
+      <HomeContainer  />
     </>
   )
 }
